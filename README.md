@@ -1,0 +1,1 @@
+# vagrant-openstack-image-builder
