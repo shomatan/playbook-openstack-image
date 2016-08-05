@@ -1,0 +1,6 @@
+DEPENDENCIES
+  openstack-image
+    path: site-cookbooks/openstack-image
+
+GRAPH
+  openstack-image (0.1.0)
