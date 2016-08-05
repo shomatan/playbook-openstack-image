@@ -28,10 +28,6 @@ image_format = node['openstack-image']['image_format']
 instance_name = node['openstack-image']['instance_name']
 tmp_file = "/tmp/#{instance_name}.#{image_format}"
 
-template "/tmp/ks.cfg" do
-  sensitive true
-end
-
 template "/root/build.sh" do
   mode 0755
   variables(
@@ -39,6 +35,9 @@ template "/root/build.sh" do
     :tmp_file => tmp_file,
     :output_file => "/var/www/html/#{instance_name}.#{image_format}",
     :format => image_format,
+    :virt_type => node['openstack-image']['virt_type'],
+    :os_location => node['openstack-image']['location_url'],
+    :kickstart_file => node['openstack-image']['kickstart_file']
   )
   sensitive true
 end

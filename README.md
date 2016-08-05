@@ -1,50 +1,27 @@
 # vagrant-openstack-image-builder
 
 ## Requirements
-### vagrant plugin
-+ vagrant-cachier
+
 
 ### Platforms
-
-- SandwichOS
+- CentOS 7.2
 
 ### Chef
-
-- Chef 12.0 or later
-
-### Cookbooks
-
-- `toaster` - openstack-image needs toaster to brown your bagel.
+- Chef 12.10 or later
 
 ## Attributes
+Generally used attributes. See attributes/default.rb.  
+Attribute prefix is `node['openstack-image']`.
 
-TODO: List your cookbook attributes here.
-
-e.g.
-### openstack-image::default
-
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['openstack-image']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
+|Key|Type|Description|Default|
+|:--|:---|:----------|:------|
+|['location_url']|String|The url which download CentOS.|http://ftp.iij.ad.jp/pub/linux/centos/7/os/x86_64/|
+|['instance_name']|String|Instance name for build. It also used as output filename.|centos-7.2|
+|['image_format']|String||qcow2|
+|['virt_type']|String|qemu or kvm.|qemu|
+|['kickstart_file']|String|The kickstart file path.|/var/www/html/ks.cfg|
 
 ## Usage
-
-### openstack-image::default
-
-TODO: Write usage instructions for each cookbook.
-
-e.g.
 Just include `openstack-image` in your node's `run_list`:
 
 ```json
@@ -55,19 +32,3 @@ Just include `openstack-image` in your node's `run_list`:
   ]
 }
 ```
-
-## Contributing
-
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
-
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
-
-## License and Authors
-
-Authors: TODO: List authors

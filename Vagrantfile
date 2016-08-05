@@ -24,7 +24,7 @@ Vagrant.configure(2) do |config|
       chef.json = {
       }
       chef.run_list = %w{
-        "recipe[openstack-image]"
+        recipe[openstack-image]
       }
     end
   end
