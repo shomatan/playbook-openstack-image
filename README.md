@@ -32,3 +32,9 @@ Just include `openstack-image` in your node's `run_list`:
   ]
 }
 ```
+
+Login as root.  
+
+```
+# /root/build.sh
+```
