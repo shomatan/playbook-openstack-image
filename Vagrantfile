@@ -21,7 +21,7 @@ Vagrant.configure(2) do |config|
       :mount_options => ["dmode=777,fmode=777"]
     machine.vm.provision :ansible_local do |ansible|
       ansible.playbook = "site.yml"
-      ansible.inventory_path = 'inventory'
+      ansible.inventory_path = 'hosts/vagrant'
       ansible.limit = 'all'
       ansible.verbose = 'v'
     end

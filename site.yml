@@ -1,6 +1,6 @@
 ---
-- name: Run the all group of hosts
-  hosts: all
+- name: Run the image building group of hosts
+  hosts: builder
   become: true
   tasks:
     - name: Ensure virt packages are installed.
@@ -18,3 +18,10 @@
 
     - name: Copy build script in place.
       template: src=build.sh.j2 dest=/usr/local/bin/build-image mode=00755
+
+- name: Run the provisioning group of hosts
+  hosts: runner
+  become: true
+  roles:
+    - role: init
+    - role: neovim
