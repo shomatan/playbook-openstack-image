@@ -3,7 +3,6 @@
 # {{ ansible_managed }}
 ###############################################################################
 
-rm -f build.log
 virsh destroy {{ instance_name }}
 virsh undefine {{ instance_name }}
 
@@ -27,8 +26,8 @@ virt-install \
 sleep 5
 
 virsh console {{ instance_name }}
-virt-sysprep -d {{ instance_name }} >> build.log
-virt-sparsify --compress {{ temp_file_path }} {{ output_file_path }} >> build.log
-virsh undefine {{ instance_name }} >> build.log
+virsh start {{ instance_name }}
 
-echo "Build.sh completed!" >> build.log
+#virt-sysprep -d {{ instance_name }}
+#virt-sparsify --compress {{ temp_file_path }} {{ output_file_path }}
+#virsh undefine {{ instance_name }}

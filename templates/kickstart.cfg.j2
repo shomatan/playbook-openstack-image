@@ -9,7 +9,7 @@ timezone --utc Asia/Tokyo
 logging --level=debug
 firstboot --disabled
 
-network --onboot=yes --device=eth0 --bootproto=dhcp --noipv6
+network --hostname=openstack --onboot=yes --device=eth0 --bootproto=dhcp --noipv6
 
 rootpw --plaintext password
 authconfig --enableshadow --passalgo=sha512
@@ -26,15 +26,6 @@ firewall --disabled
 %end
 
 %post --log=/root/ks-post.log
-
-yum -y update
-yum -y install epel-release
-yum -y install ansible
-yum -y install git
-
-git clone https://github.com/shomatan/playbook-openstack-image.git
-cd playbook-openstack-image
-ansible-playbook -i hosts/inventory site.yml
 
 for i in 0 1 2 3
 do

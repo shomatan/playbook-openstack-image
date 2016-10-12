@@ -25,10 +25,10 @@
 - name: Run the provisioning group of hosts
   hosts: runner
   become: true
-  roles:
-    - role: init
-    - role: neovim
   tasks:
+    - name: wait for SSH port up
+      wait_for: host={{ inventory_hostname }} port=22 state=started delay=120
+      delegate_to: 127.0.0.1
     # motd
     - name: Get current date.
       command: date +%Y-%m-%d
@@ -54,3 +54,6 @@
         - dracut-modules-growroot
     - name: Edit cloud.cfg
       lineinfile: "dest=/etc/cloud/cloud.cfg regexp='^    name: centos$' line='    name: user'"
+  roles:
+    - role: init
+    - role: neovim
