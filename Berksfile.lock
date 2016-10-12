@@ -1,7 +1,0 @@
-DEPENDENCIES
-  openstack-image
-    path: .
-    metadata: true
-
-GRAPH
-  openstack-image (0.1.0)
