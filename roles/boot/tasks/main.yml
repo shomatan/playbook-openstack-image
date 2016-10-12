@@ -1,0 +1,4 @@
+---
+- name: wait for SSH port up
+  wait_for: host={{ inventory_hostname }} port=22 state=started delay=120
+  delegate_to: 127.0.0.1
