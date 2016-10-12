@@ -1,0 +1,8 @@
+---
+location_url: 'http://ftp.iij.ad.jp/pub/linux/centos/7/os/x86_64/'
+instance_name: centos-7.2
+image_format: qcow2
+virt_type: qemu
+kickstart_file_path: /var/www/ks.cfg
+output_file_path: "/var/www/{{ instance_name }}.{{ image_format }}"
+temp_file_path: "/tmp/{{ instance_name }}.{{ image_format }}"

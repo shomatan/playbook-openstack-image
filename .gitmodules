@@ -1,0 +1,6 @@
+[submodule "roles/init"]
+	path = roles/init
+	url = https://github.com/shomatan/ansible-init.git
+[submodule "roles/neovim"]
+	path = roles/neovim
+	url = https://github.com/shomatan/ansible-neovim.git

@@ -1,0 +1,53 @@
+---
+- name: Run the image building group of hosts
+  hosts: builder
+  become: true
+  tasks:
+    - name: Ensure virt packages are installed.
+      yum: name={{ item }} state=installed
+      with_items:
+        - virt-viewer
+        - qemu-kvm
+        - libvirt
+        - virt-manager
+        - virt-install
+        - libguestfs-tools
+
+    - name: Ensure libvirtd is started and enabled to start at boot.
+      service: name=libvirtd state=started enabled=yes
+
+    - name: Copy build script in place.
+      template: src=build.sh.j2 dest=/usr/local/bin/build-image mode=00755
+
+- name: Run the provisioning group of hosts
+  hosts: runner
+  become: true
+  roles:
+    - role: init
+    - role: neovim
+  tasks:
+    # motd
+    - name: Get current date.
+      command: date +%Y-%m-%d
+      register: result
+      changed_when: False
+    - set_fact: date={{ result.stdout }}
+    - name: Copy motd file in place.
+      template: src=motd.j2 dest=/etc/motd
+
+    # ACPI
+    - name: Ensure acpid packages is installed.
+      yum: name=acpid state=installed
+    - name: Ensure acpid is started and enabled to start at boot.
+      service: name=acpid state=started enabled=yes
+
+    # cloud-init
+    - name: Ensure cloud-init packages are installed.
+      yum: name={{ item }} state=installed
+      with_items:
+        - cloud-init
+        - cloud-utils
+        - cloud-utils-growpart
+        - dracut-modules-growroot
+    - name: Edit cloud.cfg
+      lineinfile: "dest=/etc/cloud/cloud.cfg regexp='^    name: centos$' line='    name: user'"
