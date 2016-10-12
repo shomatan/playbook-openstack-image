@@ -22,11 +22,21 @@
     - name: Copy kickstart file in place.
       template: src=kickstart.cfg.j2 dest={{ kickstart_file_path }}
 
+    # ansible
+    - name: Ensure ansible is installed.
+      yum: name=ansible state=installed enablerepo=epel
+
+    - name: Checkout playbook.
+      git:
+        repo: https://github.com/shomatan/playbook-openstack-image.git
+        dest: /root/playbook
+        track_submodules: yes
+        accept_hostkey: yes
+
 - name: Run the provisioning group of hosts
   hosts: runner
   become: true
   roles:
-    - role: boot
     - role: init
     - role: neovim
   tasks:

@@ -28,6 +28,14 @@ sleep 5
 virsh console {{ instance_name }}
 virsh start {{ instance_name }}
 
-#virt-sysprep -d {{ instance_name }}
-#virt-sparsify --compress {{ temp_file_path }} {{ output_file_path }}
-#virsh undefine {{ instance_name }}
+sleep 60
+
+# converge
+cd /root/playbook
+ansible-playbook -i hosts/inventory.sh site.yml
+
+# finalize
+virt shutdown {{ instance_name }}
+virt-sysprep -d {{ instance_name }}
+virt-sparsify --compress {{ temp_file_path }} {{ output_file_path }}
+virsh undefine {{ instance_name }}
