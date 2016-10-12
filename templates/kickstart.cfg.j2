@@ -1,0 +1,63 @@
+# {{ ansible_managed }}
+
+install
+shutdown
+skipx
+lang en_US.UTF-8
+keyboard us
+timezone --utc Asia/Tokyo
+logging --level=debug
+firstboot --disabled
+
+network --onboot=yes --device=eth0 --bootproto=dhcp --noipv6
+
+rootpw --plaintext password
+authconfig --enableshadow --passalgo=sha512
+
+zerombr
+bootloader --location=mbr
+clearpart --all --initlabel
+part / --size=1 --fstype=ext4 --grow --asprimary
+
+selinux --disabled
+firewall --disabled
+
+%packages --nobase
+%end
+
+%post --log=/root/ks-post.log
+
+yum -y update
+yum -y install epel-release
+yum -y install ansible
+yum -y install git
+
+git clone https://github.com/shomatan/playbook-openstack-image.git
+cd playbook-openstack-image
+ansible-playbook -i hosts/inventory site.yml
+
+for i in 0 1 2 3
+do
+cat << EOF > /etc/sysconfig/network-scripts/ifcfg-eth$i
+DEVICE="eth$i"
+BOOTPROTO="dhcp"
+IPV6INIT="no"
+MTU="1500"
+NM_CONTROLLED="no"
+ONBOOT="yes"
+TYPE="Ethernet"
+PEERDNS="no"
+EOF
+done
+
+cat << EOF > /etc/sysconfig/network
+NETWORKING=yes
+NOZEROCONF=yes
+EOF
+
+cat << EOF > /etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+
+%end

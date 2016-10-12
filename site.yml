@@ -19,6 +19,9 @@
     - name: Copy build script in place.
       template: src=build.sh.j2 dest=/usr/local/bin/build-image mode=00755
 
+    - name: Copy kickstart file in place.
+      template: src=kickstart.cfg.j2 dest={{ kickstart_file_path }}
+
 - name: Run the provisioning group of hosts
   hosts: runner
   become: true
