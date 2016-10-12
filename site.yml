@@ -1,0 +1,20 @@
+---
+- name: Run the all group of hosts
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure virt packages are installed.
+      yum: name={{ item }} state=installed
+      with_items:
+        - virt-viewer
+        - qemu-kvm
+        - libvirt
+        - virt-manager
+        - virt-install
+        - libguestfs-tools
+
+    - name: Ensure libvirtd is started and enabled to start at boot.
+      service: name=libvirtd state=started enabled=yes
+
+    - name: Copy build script in place.
+      template: src=build.sh.j2 dest=/usr/local/bin/build-image mode=00755

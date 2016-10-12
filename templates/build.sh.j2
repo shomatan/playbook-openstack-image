@@ -1,0 +1,34 @@
+#!/usr/bin/bash -x
+#
+# {{ ansible_managed }}
+###############################################################################
+
+rm -f build.log
+virsh destroy {{ instance_name }}
+virsh undefine {{ instance_name }}
+
+if [ ! -e {{ temp_file_path }} ]; then
+  qemu-img create -f {{ image_format }} {{ temp_file_path }} 10G
+fi
+
+virt-install \
+  --virt-type {{ virt_type }} \
+  --name {{ instance_name }} \
+  --vcpus 1 \
+  --ram 1024 \
+  --nographics --noautoconsole --noreboot \
+  --disk {{ temp_file_path }},format={{ image_format }} \
+  --network network=default \
+  --os-type=linux --os-variant=rhel7 \
+  --location={{ location_url }} \
+  --initrd-inject {{ kickstart_file_path }} \
+  --extra-args="ks=file:/ks.cfg console=tty0 console=ttyS0,115200n8 serial"
+
+sleep 5
+
+virsh console {{ instance_name }}
+virt-sysprep -d {{ instance_name }} >> build.log
+virt-sparsify --compress {{ temp_file_path }} {{ output_file_path }} >> build.log
+virsh undefine {{ instance_name }} >> build.log
+
+echo "Build.sh completed!" >> build.log
