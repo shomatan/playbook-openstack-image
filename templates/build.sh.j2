@@ -26,16 +26,44 @@ virt-install \
 sleep 5
 
 virsh console {{ instance_name }}
+
+sleep 5
+
 virsh start {{ instance_name }}
 
-sleep 120
+sleep 10
+
+IP=`virsh domifaddr {{ instance_name }} vnet0 | grep ipv4 | awk -F' ' '{print $4}' | cut -d '/' -f 1`
+((count = 60))
+while [[ $count -ne 0 ]] ; do
+    ping -c 1 $IP
+    rc=$?
+    if [[ $rc -eq 0 ]] ; then
+        ((count = 1))
+    fi
+    ((count = count - 1))
+done
 
 # converge
+sleep 10
 cd /root/playbook
 ansible-playbook -i hosts/inventory.sh site.yml
 
 # finalize
 virsh shutdown {{ instance_name }}
+
+((count = 60))
+while [[ $count -ne 0 ]] ; do
+    sleep 1
+    virsh list | grep {{ instance_name }}
+    rc=$?
+    if [[ $rc -eq 1 ]] ; then
+        ((count = 1))
+    fi
+    ((count = count - 1))
+done
+
+sleep 5
 virt-sysprep -d {{ instance_name }}
 virt-sparsify --compress {{ temp_file_path }} {{ output_file_path }}
 virsh undefine {{ instance_name }}

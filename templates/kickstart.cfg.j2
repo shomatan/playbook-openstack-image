@@ -9,7 +9,7 @@ timezone --utc Asia/Tokyo
 logging --level=debug
 firstboot --disabled
 
-network --hostname=openstack --onboot=yes --device=eth0 --bootproto=dhcp --noipv6
+network --onboot=yes --device=eth0 --bootproto=dhcp --noipv6
 
 rootpw --plaintext password
 authconfig --enableshadow --passalgo=sha512
@@ -26,6 +26,8 @@ firewall --disabled
 %end
 
 %post --log=/root/ks-post.log
+
+yum -y update
 
 for i in 0 1 2 3
 do
