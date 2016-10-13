@@ -29,6 +29,28 @@ firewall --disabled
 
 yum -y update
 
+# ACPI
+yum -y install acpid
+systemctl enable acpid
+
+# cloud-init
+yum -y install cloud-init cloud-utils cloud-utils-growpart
+sed -i "s/^    name: centos$/    name: user/" /etc/cloud/cloud.cfg
+
+# motd
+cat << MOTD > /etc/motd
+
+ ___                       _             _
+/ _ \ _ __   ___ _ __  ___| |_ __ _  ___| | __
+| | | | |_ \ / _ \ |_ \/ __| __/ _ |/ __| |/ /
+| |_| | |_) |  __/ | | \__ \ || (_| | (__|   <
+\___/| .__/ \___|_| |_|___/\__\__,_|\___|_|\_\\
+   |_|
+   CentOS-7.2.1511 (`date +%Y-%m-%d`)
+   Openstack image
+
+MOTD
+
 for i in 0 1 2 3
 do
 cat << EOF > /etc/sysconfig/network-scripts/ifcfg-eth$i
