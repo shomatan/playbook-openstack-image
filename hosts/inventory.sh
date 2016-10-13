@@ -8,7 +8,7 @@ usage() {
 
 case $1 in
   "--list")
-    IP=`virsh domifaddr centos-7.2 vnet0 | grep ipv4 | awk -F' ' '{print $5}' | cut -d '/' -f 1`
+    IP=`virsh domifaddr centos-7.2 vnet0 | grep ipv4 | awk -F' ' '{print $4}' | cut -d '/' -f 1`
     echo {\"runner\":{\"hosts\":[\"$IP\"]}}
     ;;
   "--host")
