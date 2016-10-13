@@ -63,5 +63,9 @@
         - cloud-utils
         - cloud-utils-growpart
         - dracut-modules-growroot
+
     - name: Edit cloud.cfg
-      lineinfile: "dest=/etc/cloud/cloud.cfg regexp='^    name: centos$' line='    name: user'"
+      lineinfile:
+        dest: /etc/cloud/cloud.cfg
+        regexp: '^    name: centos$'
+        line: '    name: user'
